@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/")
+@WebServlet("/login")
 public class LoginController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().write("<html><body>Hello Servlet</body><html>");
+        getServletContext().getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
     }
 }
