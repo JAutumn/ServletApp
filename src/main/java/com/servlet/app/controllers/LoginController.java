@@ -26,10 +26,10 @@ public class LoginController extends HttpServlet {
         Optional.ofNullable(req.getParameter("error")).ifPresent(error -> {
             switch (error) {
             case "pass" :
-                req.setAttribute("error", "Wrong password, please try again");
+                req.setAttribute("passError", "Wrong password, please try again");
                 break;
             case "email" :
-                req.setAttribute("error", "Such email is not registered");
+                req.setAttribute("emailError", "Such email is not registered");
                 break;
             }
         });
