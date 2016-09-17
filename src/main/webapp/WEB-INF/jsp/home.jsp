@@ -41,10 +41,10 @@
                     <tbody>
                         <c:forEach var="tableUser" items="${users}">
                             <tr>
-                                <th>${tableUser.name}</th>
-                                <th>${tableUser.email}</th>
-                                <th>${tableUser.password}</th>
-                                <th>${tableUser.role}</th>
+                                <td>${tableUser.name}</td>
+                                <td>${tableUser.email}</td>
+                                <td>${tableUser.password}</td>
+                                <td>${tableUser.role}</td>
                             </tr>
                         </c:forEach>
                     </tbody>
