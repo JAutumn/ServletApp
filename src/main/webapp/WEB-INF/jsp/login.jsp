@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -16,5 +17,8 @@
             </div>
             <button type="submit">Sign in</button>
         </form>
+        <c:if test="${not empty error}">
+            <span style="color: red">${error}</span>
+        </c:if>
     </body>
 </html>
