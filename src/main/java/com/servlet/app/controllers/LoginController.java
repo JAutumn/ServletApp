@@ -11,19 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.servlet.app.entity.User;
-import com.servlet.app.services.FileService;
 import com.servlet.app.services.UserService;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
-    private final static String USERS_FILE = "users.txt";
     private UserService userService;
 
     @Override
     public void init() throws ServletException {
-        super.init();
-        String filePath = getClass().getClassLoader().getResource(USERS_FILE).getPath();
-        userService = new UserService(FileService.getUsersFromFile(filePath));
+        userService = (UserService) getServletContext().getAttribute("userService");
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,7 +39,7 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");
         String password =  req.getParameter("password");
-        Optional<User> userOptional = userService.getUserByEmail(email);
+        Optional<User> userOptional = userService.getByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getPassword().equals(password)) {

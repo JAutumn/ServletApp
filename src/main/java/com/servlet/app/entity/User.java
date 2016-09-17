@@ -2,24 +2,51 @@ package com.servlet.app.entity;
 
 import java.util.Objects;
 
-public class User {
+public class User implements Comparable<User>{
+    private String name;
     private String email;
     private String password;
+    private Role role;
+
+    public User setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public User setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public User setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public User setRole(String role) {
+        this.role = Role.valueOf(role);
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public Role getRole() {
+        return role;
+    }
+
+    @Override
+    public int compareTo(User user) {
+        return getName().compareTo(user.getName());
     }
 
     @Override
