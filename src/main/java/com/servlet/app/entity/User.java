@@ -3,10 +3,21 @@ package com.servlet.app.entity;
 import java.util.Objects;
 
 public class User implements Comparable<User>{
+    private Long id;
     private String name;
     private String email;
     private String password;
     private Role role;
+
+    public User setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public User setId(String id) {
+        this.id = Long.valueOf(id);
+        return this;
+    }
 
     public User setName(String name) {
         this.name = name;
@@ -26,6 +37,10 @@ public class User implements Comparable<User>{
     public User setRole(String role) {
         this.role = Role.valueOf(role);
         return this;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -54,11 +69,11 @@ public class User implements Comparable<User>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(email, user.email);
+        return Objects.equals(id, user.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(id);
     }
 }

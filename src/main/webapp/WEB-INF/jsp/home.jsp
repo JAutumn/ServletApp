@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Servlet Application login page</title>
+        <title>Servlet Application Home page</title>
     </head>
     <body>
         <div>
@@ -45,6 +45,11 @@
                                 <td>${tableUser.email}</td>
                                 <td>${tableUser.password}</td>
                                 <td>${tableUser.role}</td>
+                                <td>
+                                    <a href="${pageContext.request.contextPath}/users/${tableUser.id}">
+                                        edit
+                                    </a>
+                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>

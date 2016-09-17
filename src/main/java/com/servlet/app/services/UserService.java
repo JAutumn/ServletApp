@@ -16,11 +16,26 @@ public class UserService {
         this.users = new CopyOnWriteArraySet<>(users);
     }
 
+    public Set<User> getAll() {
+        return users;
+    }
+
     public Optional<User> getByEmail(String email) {
         return users.stream().filter(user -> user.getEmail().equals(email)).findAny();
     }
 
     public List<User> getAllExcept(User currentUser) {
         return users.stream().filter(user -> !user.equals(currentUser)).sorted().collect(Collectors.toList());
+    }
+
+    public Optional<User> getById(Long id) {
+        return users.stream().filter(user -> user.getId().equals(id)).findAny();
+    }
+
+    public void saveUser(User user) {
+        if (users.contains(user)) {
+            users.remove(user);
+        }
+        users.add(user);
     }
 }

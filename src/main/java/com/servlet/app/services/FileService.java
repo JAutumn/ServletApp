@@ -2,6 +2,8 @@ package com.servlet.app.services;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,12 +25,13 @@ public class FileService {
         Validate.exist(path, "file should exists");
         Set<User> users = new HashSet<>();
         LOGGER.info("Read users file");
-        try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
+        try (BufferedReader bufferedReader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 StringTokenizer tokenizer = new StringTokenizer(line, delimiter);
                 User user = new User();
-                user.setName(tokenizer.nextToken())
+                user.setId(tokenizer.nextToken())
+                    .setName(tokenizer.nextToken())
                     .setEmail(tokenizer.nextToken())
                     .setPassword(tokenizer.nextToken())
                     .setRole(tokenizer.nextToken());
@@ -38,5 +41,33 @@ public class FileService {
             new RuntimeException("Can't read users file", ex);
         }
         return users;
+    }
+
+    public static void writeUsersToFile(String filePath, String delimiter, Set<User> users) {
+        Path path = Paths.get(filePath);
+        Validate.exist(path, "file should exists");
+        LOGGER.info("Write users to file");
+        try (Writer bufferedWriter = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+            for (User user : users) {
+                bufferedWriter.write(convertToLine(user, delimiter));
+            }
+        } catch (IOException ex) {
+            LOGGER.error("Users not save");
+        }
+    }
+
+    private static String convertToLine(User user, String delimiter) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(user.getId())
+               .append(delimiter)
+               .append(user.getName())
+               .append(delimiter)
+               .append(user.getEmail())
+               .append(delimiter)
+               .append(user.getPassword())
+               .append(delimiter)
+               .append(user.getRole())
+               .append(System.lineSeparator());
+        return builder.toString();
     }
 }

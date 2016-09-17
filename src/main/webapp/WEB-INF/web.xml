@@ -11,6 +11,10 @@
         <param-name>fileAttributeDelimiter</param-name>
         <param-value>|</param-value>
     </context-param>
+    <error-page>
+        <exception-type>com.servlet.app.exceptions.AppExceptions</exception-type>
+        <location>/errorHandler</location>
+    </error-page>
     <listener>
         <listener-class>com.servlet.app.AppStarter</listener-class>
     </listener>

@@ -23,17 +23,22 @@ public class LoginController extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Optional.ofNullable(req.getParameter("error")).ifPresent(error -> {
-            switch (error) {
-            case "pass" :
-                req.setAttribute("error", "Wrong password, please try again");
-                break;
-            case "email" :
-                req.setAttribute("error", "Such email is not registered");
-                break;
-            }
-        });
-        getServletContext().getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+        HttpSession session = req.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+            resp.sendRedirect(req.getContextPath() + "/home");
+        } else {
+            Optional.ofNullable(req.getParameter("error")).ifPresent(error -> {
+                switch (error) {
+                case "pass" :
+                    req.setAttribute("error", "Wrong password, please try again");
+                    break;
+                case "email" :
+                    req.setAttribute("error", "Such email is not registered");
+                    break;
+                }
+            });
+            getServletContext().getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+        }
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

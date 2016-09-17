@@ -41,5 +41,8 @@ public class AppStarter implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         LOGGER.info("App close");
+        String filePath = getClass().getClassLoader().getResource(USERS_FILE).getPath();
+        UserService userService = (UserService) servletContextEvent.getServletContext().getAttribute("userService");
+        FileService.writeUsersToFile(filePath, FILE_ATTRIBUTE_DELIMITER, userService.getAll());
     }
 }
