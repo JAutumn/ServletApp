@@ -22,17 +22,8 @@ public class HomeController extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if (session != null) {
-            User user = (User) session.getAttribute("user");
-            if (user != null) {
-                req.setAttribute("users", userService.getAllExcept(user));
-                getServletContext().getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(req, resp);
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/login");
-            }
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/login");
-        }
+        User user = (User) req.getSession(false).getAttribute("user");
+        req.setAttribute("users", userService.getAllExcept(user));
+        getServletContext().getRequestDispatcher("/WEB-INF/jsp/home.jsp").forward(req, resp);
     }
 }
