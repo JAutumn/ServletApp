@@ -7,7 +7,9 @@
 <body>
 <form>
     <div>
-        Your email: ${sessionScope.get("email")}
+        Your email: ${email}
+        <br/>
+        Description: ${description}
     </div>
 </form>
 </body>

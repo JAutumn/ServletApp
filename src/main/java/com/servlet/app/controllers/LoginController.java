@@ -21,6 +21,8 @@ public class LoginController extends HttpServlet {
         if ("admin@gmail.com".equals(email) && "admin".equals(password)) {
             HttpSession session = req.getSession(true);
             session.setAttribute("email", email);
+            String description =  req.getParameter("description");
+            session.setAttribute("description", description);
             resp.sendRedirect("home");
         } else {
             resp.sendRedirect("error");

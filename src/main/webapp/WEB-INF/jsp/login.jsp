@@ -14,6 +14,10 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Password">
             </div>
+            <div>
+                <label for="description">Description</label>
+                <input type="text" id="description" name="description" placeholder="Description">
+            </div>
             <button type="submit">Sign in</button>
         </form>
     </body>
