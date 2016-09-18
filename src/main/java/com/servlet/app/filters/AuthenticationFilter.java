@@ -1,5 +1,7 @@
 package com.servlet.app.filters;
 
+import static com.servlet.app.AppStarter.getPublicPath;
+
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
@@ -10,15 +12,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebFilter("/*" )
+import com.servlet.app.AppStarter;
+
+@WebFilter("/pages/*" )
 public class AuthenticationFilter extends HttpFilter {
 
     @Override
     public void doHttpFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain) throws IOException, ServletException {
+        String requestURI = req.getRequestURI();
         HttpSession session = req.getSession(false);
-        if (req.getRequestURI().endsWith("/login")) {
+        if (requestURI.endsWith(getPublicPath() + "/login")) {
             if (session != null && session.getAttribute("user") != null) {
-                resp.sendRedirect(req.getContextPath() + "/home");
+                resp.sendRedirect(getPublicPath() + "/home");
             } else {
                 filterChain.doFilter(req, resp);
             }
@@ -26,7 +31,7 @@ public class AuthenticationFilter extends HttpFilter {
             if (session != null && session.getAttribute("user") != null) {
                 filterChain.doFilter(req, resp);
             } else {
-                resp.sendRedirect(req.getContextPath() + "/login");
+                resp.sendRedirect(getPublicPath() + "/login");
             }
         }
     }

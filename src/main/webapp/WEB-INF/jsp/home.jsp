@@ -7,8 +7,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Servlet Application Home page</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="${resPath}/bootstrap/3.3.7-1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="${resPath}/bootstrap/3.3.7-1/css/bootstrap-theme.min.css">
     </head>
     <body>
         <div class="container-fluid">
@@ -45,7 +45,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <form method="post" action="${pageContext.request.contextPath}/logout">
+                                        <form method="post" action="${pagesPath}/logout">
                                             <button type="submit" class="btn btn-primary">Logout</button>
                                         </form>
                                     </td>
@@ -62,7 +62,7 @@
                                 <h4>Users</h4>
                             </div>
                             <div class="panel-body table-responsive">
-                                <table class="table table-striped table-hover table-bordered"">
+                                <table class="table table-striped table-hover table-bordered">
                                     <thead>
                                         <tr>
                                             <th style="text-align: center">Name</th>
@@ -80,7 +80,7 @@
                                             <td>${tableUser.password}</td>
                                             <td>${tableUser.role}</td>
                                             <td style="text-align: center">
-                                                <a class="btn btn-primary" href="${pageContext.request.contextPath}/users/${tableUser.id}">
+                                                <a class="btn btn-primary" href="${pagesPath}/users/${tableUser.id}">
                                                     edit
                                                 </a>
                                             </td>
@@ -94,7 +94,7 @@
                 </div>
             </div>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="${resPath}/jquery/3.1.0/jquery.min.js"></script>
+        <script src="${resPath}/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
     </body>
 </html>

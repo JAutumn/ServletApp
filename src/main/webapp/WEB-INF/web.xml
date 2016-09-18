@@ -4,16 +4,28 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
          http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <context-param>
-        <param-name>userFile</param-name>
+        <param-name>USERS_FILE</param-name>
         <param-value>users.txt</param-value>
     </context-param>
     <context-param>
-        <param-name>fileAttributeDelimiter</param-name>
+        <param-name>FILE_ATTRIBUTE_DELIMITER</param-name>
         <param-value>|</param-value>
+    </context-param>
+    <context-param>
+        <param-name>PUBLIC_PATH</param-name>
+        <param-value>/pages</param-value>
+    </context-param>
+    <context-param>
+        <param-name>RESOURCE_PATH</param-name>
+        <param-value>/webjars</param-value>
+    </context-param>
+    <context-param>
+        <param-name>JSP_DIRECTORY</param-name>
+        <param-value>/WEB-INF/jsp</param-value>
     </context-param>
     <error-page>
         <exception-type>com.servlet.app.exceptions.AppExceptions</exception-type>
-        <location>/errorHandler</location>
+        <location>/pages/errorHandler</location>
     </error-page>
     <listener>
         <listener-class>com.servlet.app.AppStarter</listener-class>

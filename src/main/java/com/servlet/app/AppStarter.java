@@ -15,6 +15,22 @@ public class AppStarter implements ServletContextListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppStarter.class);
     private static String USERS_FILE;
     private static String FILE_ATTRIBUTE_DELIMITER;
+    private static String CTX;
+    private static String PUBLIC_PATH;
+    private static String RESOURCE_PATH;
+    private static String JSP_DIRECTORY;
+
+    public static String getPublicPath() {
+        return CTX + PUBLIC_PATH;
+    }
+
+    public static String getResourcePath() {
+        return CTX + RESOURCE_PATH;
+    }
+
+    public static String getJspDirectory() {
+        return JSP_DIRECTORY;
+    }
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
@@ -22,13 +38,23 @@ public class AppStarter implements ServletContextListener {
         LOGGER.info("App start");
         ServletContext servletContext = servletContextEvent.getServletContext();
         initParams(servletContext);
-        initUserStorage(servletContext);
+        initContextVariables(servletContext);
     }
 
     private void initParams(ServletContext servletContext) {
         LOGGER.info("init params");
-        USERS_FILE  = servletContext.getInitParameter("userFile");
-        FILE_ATTRIBUTE_DELIMITER = servletContext.getInitParameter("fileAttributeDelimiter");
+        CTX = servletContext.getContextPath();
+        PUBLIC_PATH = servletContext.getInitParameter("PUBLIC_PATH");
+        RESOURCE_PATH = servletContext.getInitParameter("RESOURCE_PATH");
+        JSP_DIRECTORY = servletContext.getInitParameter("JSP_DIRECTORY");
+        USERS_FILE = servletContext.getInitParameter("USERS_FILE");
+        FILE_ATTRIBUTE_DELIMITER = servletContext.getInitParameter("FILE_ATTRIBUTE_DELIMITER");
+    }
+
+    private void initContextVariables(ServletContext servletContext) {
+        initUserStorage(servletContext);
+        servletContext.setAttribute("pagesPath", getPublicPath());
+        servletContext.setAttribute("resPath", getResourcePath());
     }
 
     private void initUserStorage(ServletContext servletContext) {

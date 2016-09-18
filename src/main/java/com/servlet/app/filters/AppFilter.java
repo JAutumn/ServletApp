@@ -1,6 +1,7 @@
 package com.servlet.app.filters;
 
 import static com.servlet.app.AppStarter.getPublicPath;
+import static com.servlet.app.AppStarter.getResourcePath;
 
 import java.io.IOException;
 
@@ -11,16 +12,13 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.servlet.app.entity.Role;
-import com.servlet.app.entity.User;
-
-@WebFilter("/pages/users/*")
-public class AuthorizationFilter extends HttpFilter {
+@WebFilter("/*")
+public class AppFilter extends HttpFilter {
 
     @Override
     public void doHttpFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain) throws IOException, ServletException {
-        User user = (User) req.getSession(false).getAttribute("user");
-        if (Role.ADMIN.equals(user.getRole())) {
+        String requestURI = req.getRequestURI();
+        if (requestURI.startsWith(getPublicPath()) || requestURI.startsWith(getResourcePath())) {
             filterChain.doFilter(req, resp);
         } else {
             resp.sendRedirect(getPublicPath() + "/home");

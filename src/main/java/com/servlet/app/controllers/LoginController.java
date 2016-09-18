@@ -1,5 +1,8 @@
 package com.servlet.app.controllers;
 
+import static com.servlet.app.AppStarter.getJspDirectory;
+import static com.servlet.app.AppStarter.getPublicPath;
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -13,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import com.servlet.app.entity.User;
 import com.servlet.app.services.UserService;
 
-@WebServlet("/login")
+@WebServlet("/pages/login")
 public class LoginController extends HttpServlet {
     private UserService userService;
 
@@ -33,7 +36,7 @@ public class LoginController extends HttpServlet {
                 break;
             }
         });
-        getServletContext().getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+        getServletContext().getRequestDispatcher(getJspDirectory() + "/login.jsp").forward(req, resp);
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -45,12 +48,12 @@ public class LoginController extends HttpServlet {
             if (user.getPassword().equals(password)) {
                 HttpSession session = req.getSession(true);
                 session.setAttribute("user", user);
-                resp.sendRedirect("home");
+                resp.sendRedirect(getPublicPath() + "/home");
             } else {
-                resp.sendRedirect(req.getContextPath() + "/login?error=pass");
+                resp.sendRedirect(getPublicPath() + "/login?error=pass");
             }
         } else {
-            resp.sendRedirect(req.getContextPath() + "/login?error=email");
+            resp.sendRedirect(getPublicPath() + "/login?error=email");
         }
     }
 }

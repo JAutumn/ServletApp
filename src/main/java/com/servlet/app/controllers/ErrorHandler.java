@@ -1,5 +1,7 @@
 package com.servlet.app.controllers;
 
+import static com.servlet.app.AppStarter.getPublicPath;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -9,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/errorHandler")
+@WebServlet("/pages/errorHandler")
 public class ErrorHandler extends HttpServlet {
 
     @Override
@@ -19,6 +21,6 @@ public class ErrorHandler extends HttpServlet {
             Throwable exception = (Throwable) req.getAttribute("javax.servlet.error.exception");
             session.setAttribute("error", exception.getMessage());
         }
-        resp.sendRedirect(req.getContextPath() + "/error");
+        resp.sendRedirect(getPublicPath() + "/error");
     }
 }

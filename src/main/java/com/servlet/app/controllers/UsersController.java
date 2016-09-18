@@ -1,8 +1,10 @@
 package com.servlet.app.controllers;
 
+import static com.servlet.app.AppStarter.getJspDirectory;
+import static com.servlet.app.AppStarter.getPublicPath;
+
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
@@ -15,7 +17,7 @@ import com.servlet.app.entity.User;
 import com.servlet.app.exceptions.NoUserWithSuchId;
 import com.servlet.app.services.UserService;
 
-@WebServlet("/users/*")
+@WebServlet("/pages/users/*")
 public class UsersController extends RestServlet<User> {
     private UserService userService;
 
@@ -33,7 +35,7 @@ public class UsersController extends RestServlet<User> {
         Optional<User> userOptional = userService.getById(id);
         if (userOptional.isPresent()) {
             req.setAttribute("targetUser", userOptional.get());
-            getServletContext().getRequestDispatcher("/WEB-INF/jsp/users/edit.jsp").forward(req, resp);
+            getServletContext().getRequestDispatcher(getJspDirectory() + "/users/edit.jsp").forward(req, resp);
         } else {
             throw new NoUserWithSuchId(String.valueOf(id));
         }
@@ -46,7 +48,7 @@ public class UsersController extends RestServlet<User> {
             User user = userOptional.get();
             requestUser.setId(user.getId());
             userService.saveUser(requestUser);
-            resp.sendRedirect(req.getContextPath() + "/home");
+            resp.sendRedirect(getPublicPath() + "/home");
         } else {
             throw new NoUserWithSuchId(String.valueOf(id));
         }
