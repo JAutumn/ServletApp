@@ -21,7 +21,6 @@ public class LoginController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        super.init();
         String filePath = getClass().getClassLoader().getResource(USERS_FILE).getPath();
         userService = new UserService(FileService.getUsersFromFile(filePath));
     }
@@ -47,7 +46,7 @@ public class LoginController extends HttpServlet {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getPassword().equals(password)) {
-                HttpSession session = req.getSession(true);
+                HttpSession session = req.getSession();
                 session.setAttribute("user", user);
                 resp.sendRedirect("home");
             } else {
