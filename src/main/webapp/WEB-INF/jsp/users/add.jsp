@@ -6,10 +6,10 @@
             <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4>User Editing</h4>
+                        <h4>User Adding</h4>
                     </div>
                     <div class="panel-body table-responsive">
-                        <form method="POST" action="${pagesPath}/users/${targetUser.id}">
+                        <form method="POST" action="${pagesPath}/users/add">
                             <table class="table">
                                 <tbody>
                                     <tr>
