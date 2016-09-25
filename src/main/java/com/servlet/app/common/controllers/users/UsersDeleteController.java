@@ -27,7 +27,7 @@ public class UsersDeleteController extends HttpServletWrapper<User> {
 
     @Override
     public void init() throws ServletException {
-        userService = (UserService) getServletContext().getAttribute("userService");
+        userService = new UserService();
     }
 
     @Override

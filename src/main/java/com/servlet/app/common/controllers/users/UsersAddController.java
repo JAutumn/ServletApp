@@ -28,7 +28,7 @@ public class UsersAddController extends HttpServletWrapper<User> {
 
     @Override
     public void init() throws ServletException {
-        userService = (UserService) getServletContext().getAttribute("userService");
+        userService = new UserService();
     }
 
     @Override
@@ -40,10 +40,10 @@ public class UsersAddController extends HttpServletWrapper<User> {
     protected void processPost(ModelAwareHttpServletRequest<User> req, HttpServletResponse resp) throws ServletException, IOException {
         User user = req.getModel();
         if (user.isValid()) {
-            if (userService.isExisted(user)) {
+            if (userService.isExisted(user.getEmail())) {
                 throw new UserAlreadyExistedException(user);
             } else {
-                userService.saveUser(user);
+                userService.createUser(user);
                 resp.sendRedirect(getPublicPath() + "/users/");
             }
         } else {

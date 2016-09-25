@@ -3,18 +3,17 @@ package com.servlet.app.common;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 
 import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.servlet.app.common.services.FileService;
-import com.servlet.app.common.services.UserService;
+import com.servlet.app.common.db.ConnectionProvider;
 
+@WebListener
 public class AppStarter implements ServletContextListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppStarter.class);
-    private static String USERS_FILE;
-    private static String FILE_ATTRIBUTE_DELIMITER;
     private static String CTX;
     private static String PUBLIC_PATH;
     private static String RESOURCE_PATH;
@@ -39,6 +38,11 @@ public class AppStarter implements ServletContextListener {
         ServletContext servletContext = servletContextEvent.getServletContext();
         initParams(servletContext);
         initContextVariables(servletContext);
+        try {
+            Class.forName(ConnectionProvider.class.getName());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void initParams(ServletContext servletContext) {
@@ -47,28 +51,15 @@ public class AppStarter implements ServletContextListener {
         PUBLIC_PATH = servletContext.getInitParameter("PUBLIC_PATH");
         RESOURCE_PATH = servletContext.getInitParameter("RESOURCE_PATH");
         JSP_DIR = servletContext.getInitParameter("JSP_DIR");
-        USERS_FILE = servletContext.getInitParameter("USERS_FILE");
-        FILE_ATTRIBUTE_DELIMITER = servletContext.getInitParameter("FILE_ATTRIBUTE_DELIMITER");
     }
 
     private void initContextVariables(ServletContext servletContext) {
-        initUserStorage(servletContext);
         servletContext.setAttribute("pagesPath", getPublicPath());
         servletContext.setAttribute("resPath", getResourcePath());
-    }
-
-    private void initUserStorage(ServletContext servletContext) {
-        LOGGER.info("init user storage");
-        String filePath = getClass().getClassLoader().getResource(USERS_FILE).getPath();
-        UserService userService = new UserService(FileService.getUsersFromFile(filePath, FILE_ATTRIBUTE_DELIMITER));
-        servletContext.setAttribute("userService", userService);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         LOGGER.info("App close");
-        String filePath = getClass().getClassLoader().getResource(USERS_FILE).getPath();
-        UserService userService = (UserService) servletContextEvent.getServletContext().getAttribute("userService");
-        FileService.writeUsersToFile(filePath, FILE_ATTRIBUTE_DELIMITER, userService.getAll());
     }
 }

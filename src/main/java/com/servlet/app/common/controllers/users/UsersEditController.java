@@ -29,7 +29,7 @@ public class UsersEditController extends HttpServletWrapper<User> {
 
     @Override
     public void init() throws ServletException {
-        userService = (UserService) getServletContext().getAttribute("userService");
+        userService = new UserService();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class UsersEditController extends HttpServletWrapper<User> {
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 requestUser.setId(user.getId());
-                userService.saveUser(requestUser);
+                userService.updateUser(requestUser);
                 resp.sendRedirect(getPublicPath() + "/users/");
             } else {
                 throw new NoUserWithSuchIdException(String.valueOf(userId));

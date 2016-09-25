@@ -19,7 +19,7 @@ public class UsersViewController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        userService = (UserService) getServletContext().getAttribute("userService");
+        userService = new UserService();
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
