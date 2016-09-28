@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import com.servlet.app.common.model.UserConverter;
 import com.servlet.app.common.model.UserValidator;
@@ -20,6 +22,7 @@ import com.servlet.app.common.services.UserService;
 import com.servlet.app.core.wrappers.ModelAwareHttpServletRequest;
 
 @WebServlet("/pages/users/*")
+@MultipartConfig
 public class UsersEditController extends HttpServletWrapper<User> {
     private UserService userService;
 
@@ -53,6 +56,8 @@ public class UsersEditController extends HttpServletWrapper<User> {
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 requestUser.setId(user.getId());
+                Part part = req.getPart("photo");
+                part.write(getServletContext().getRealPath("/WEB-INF/") + part.getSubmittedFileName());
                 userService.updateUser(requestUser);
                 resp.sendRedirect(getPublicPath() + "/users/");
             } else {
@@ -63,5 +68,9 @@ public class UsersEditController extends HttpServletWrapper<User> {
             req.getMessages().forEach((key, msg) -> session.setAttribute(key, msg));
             resp.sendRedirect(getPublicPath() + "/users/add");
         }
+    }
+
+    private void downloadPhoto() {
+
     }
 }

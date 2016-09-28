@@ -9,9 +9,13 @@
                         <h4>User Editing</h4>
                     </div>
                     <div class="panel-body table-responsive">
-                        <form method="POST" action="${pagesPath}/users/${targetUser.id}">
+                        <form method="POST" action="${pagesPath}/users/${targetUser.id}" enctype="multipart/form-data">
                             <table class="table">
                                 <tbody>
+                                    <tr>
+                                        <td><label for="photo" class="control-label">Photo</label></td>
+                                        <td><input type="file" id="photo" name="photo"/></td>
+                                    </tr>
                                     <tr>
                                         <td><label for="name" class="control-label">Name</label></td>
                                         <td><input type="text" class="form-control" id="name" name="name" value="${targetUser.name}" required placeholder="Name"/></td>
