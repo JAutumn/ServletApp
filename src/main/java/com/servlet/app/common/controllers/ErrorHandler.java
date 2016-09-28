@@ -11,15 +11,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.servlet.app.common.services.FileService;
+
 @WebServlet("/pages/errorHandler")
 public class ErrorHandler extends HttpServlet {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileService.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
+        String msg = ((Throwable) req.getAttribute("javax.servlet.error.exception")).getMessage();
+        LOGGER.error(msg);
         if (session != null) {
-            Throwable exception = (Throwable) req.getAttribute("javax.servlet.error.exception");
-            session.setAttribute("error", exception.getMessage());
+            session.setAttribute("error", msg);
         }
         resp.sendRedirect(getPublicPath() + "/error");
     }

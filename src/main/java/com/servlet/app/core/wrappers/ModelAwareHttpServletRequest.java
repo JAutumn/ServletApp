@@ -3,17 +3,15 @@ package com.servlet.app.core.wrappers;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.servlet.app.common.exceptions.BadIdParamException;
 import com.servlet.app.core.validation.ModelValidator;
 import com.servlet.app.core.model.Model;
 import com.servlet.app.core.converters.ModelConverter;
 
-public class ModelAwareHttpServletRequest<T extends Model> extends HttpServletRequestWrapper {
+public class ModelAwareHttpServletRequest<T extends Model> extends IdAwareHttpServletRequest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelAwareHttpServletRequest.class);
     private final Map<String, Object> messages;
     private final HttpServletRequest request;
@@ -39,16 +37,10 @@ public class ModelAwareHttpServletRequest<T extends Model> extends HttpServletRe
         }
     }
 
+    @Override
     public Long getIdFromRequest() {
         if (extractId) {
-            String pathInfo = request.getPathInfo();
-            String idAsString = pathInfo.replace("/", "");
-            try {
-                return Long.parseLong(idAsString);
-
-            } catch (NumberFormatException e) {
-                throw new BadIdParamException(idAsString);
-            }
+           return super.getIdFromRequest();
         } else {
             throw new IllegalArgumentException("extract id set to false");
         }

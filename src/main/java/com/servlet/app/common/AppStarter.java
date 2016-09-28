@@ -18,6 +18,7 @@ public class AppStarter implements ServletContextListener {
     private static String PUBLIC_PATH;
     private static String RESOURCE_PATH;
     private static String JSP_DIR;
+    private static String NO_AVATAR_PATH;
 
     public static String getPublicPath() {
         return CTX + PUBLIC_PATH;
@@ -29,6 +30,10 @@ public class AppStarter implements ServletContextListener {
 
     public static String getJspDir() {
         return JSP_DIR;
+    }
+
+    public static String getNoAvatarPath() {
+        return NO_AVATAR_PATH;
     }
 
     @Override
@@ -51,6 +56,7 @@ public class AppStarter implements ServletContextListener {
         PUBLIC_PATH = servletContext.getInitParameter("PUBLIC_PATH");
         RESOURCE_PATH = servletContext.getInitParameter("RESOURCE_PATH");
         JSP_DIR = servletContext.getInitParameter("JSP_DIR");
+        NO_AVATAR_PATH = servletContext.getInitParameter("NO_AVATAR_PATH");
     }
 
     private void initContextVariables(ServletContext servletContext) {

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.servlet.app.common.model.User;
+import com.servlet.app.common.dao.UserDAO;
 import com.servlet.app.common.services.UserService;
 
 @WebServlet("/pages/users/")

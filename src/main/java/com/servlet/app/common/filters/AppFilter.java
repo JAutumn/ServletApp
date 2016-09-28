@@ -12,6 +12,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.servlet.app.core.wrappers.HttpFilter;
+
 @WebFilter("/*")
 public class AppFilter extends HttpFilter {
 

@@ -7,9 +7,10 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4>User Adding</h4>
+                        <h4>${creatingErr}</h4>
                     </div>
                     <div class="panel-body table-responsive">
-                        <form method="POST" action="${pagesPath}/users/add">
+                        <form method="POST" action="${pagesPath}/users/add" enctype="multipart/form-data">
                             <table class="table">
                                 <tbody>
                                     <tr>
@@ -27,6 +28,10 @@
                                     <tr>
                                         <td><label for="role" class="control-label">Role</label></td>
                                         <td><input type="text" class="form-control" id="role" name="role" value="${targetUser.role}" required placeholder="role"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="avatar" class="control-label">Avatar</label></td>
+                                        <td><input type="file" id="avatar" name="avatar" required/></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">

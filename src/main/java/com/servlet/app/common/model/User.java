@@ -1,10 +1,11 @@
 package com.servlet.app.common.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import com.servlet.app.core.model.Model;
 
-public class User extends Model implements Comparable<User>{
+public class User extends Model implements Comparable<User>, Serializable{
     private Long id;
     private String name;
     private String email;

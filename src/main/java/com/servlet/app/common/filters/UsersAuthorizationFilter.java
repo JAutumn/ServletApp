@@ -13,14 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.servlet.app.common.model.Role;
 import com.servlet.app.common.model.User;
+import com.servlet.app.core.wrappers.HttpFilter;
 
 @WebFilter("/pages/users/*")
-public class AuthorizationFilter extends HttpFilter {
+public class UsersAuthorizationFilter extends HttpFilter {
 
     @Override
     public void doHttpFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain) throws IOException, ServletException {
         User user = (User) req.getSession(false).getAttribute("user");
-        if (Role.ADMIN.equals(user.getRole())) {
+        if (Role.ADMIN == user.getRole()) {
             filterChain.doFilter(req, resp);
         } else {
             resp.sendRedirect(getPublicPath() + "/home");

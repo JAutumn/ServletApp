@@ -1,4 +1,4 @@
-package com.servlet.app.common.filters;
+package com.servlet.app.core.wrappers;
 
 import java.io.IOException;
 

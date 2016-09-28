@@ -6,20 +6,23 @@ import static com.servlet.app.common.AppStarter.getPublicPath;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.servlet.app.common.exceptions.UserCreatingException;
 import com.servlet.app.common.model.UserConverter;
 import com.servlet.app.common.model.UserValidator;
-import com.servlet.app.core.wrappers.HttpServletWrapper;
+import com.servlet.app.common.services.UserService;
+import com.servlet.app.core.wrappers.ModelAwareHttpServletWrapper;
 import com.servlet.app.common.model.User;
 import com.servlet.app.common.exceptions.UserAlreadyExistedException;
-import com.servlet.app.common.services.UserService;
 import com.servlet.app.core.wrappers.ModelAwareHttpServletRequest;
 
 @WebServlet("/pages/users/add")
-public class UsersAddController extends HttpServletWrapper<User> {
+@MultipartConfig
+public class UsersAddController extends ModelAwareHttpServletWrapper<User> {
     private UserService userService;
 
     public UsersAddController() {
@@ -32,22 +35,27 @@ public class UsersAddController extends HttpServletWrapper<User> {
     }
 
     @Override
-    protected void processGet(ModelAwareHttpServletRequest<User> req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void processModelAwareGet(ModelAwareHttpServletRequest<User> req, HttpServletResponse resp) throws ServletException, IOException {
         getServletContext().getRequestDispatcher(getJspDir() + "/users/add.jsp").forward(req, resp);
     }
 
     @Override
-    protected void processPost(ModelAwareHttpServletRequest<User> req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void processModelAwarePost(ModelAwareHttpServletRequest<User> req, HttpServletResponse resp) throws ServletException, IOException {
         User user = req.getModel();
+        HttpSession session = req.getSession(false);
         if (user.isValid()) {
-            if (userService.isExisted(user.getEmail())) {
+            if (userService.isUserExisted(user.getEmail())) {
                 throw new UserAlreadyExistedException(user);
             } else {
-                userService.createUser(user);
-                resp.sendRedirect(getPublicPath() + "/users/");
+                try {
+                    userService.create(user, req.getPart("avatar"));
+                    resp.sendRedirect(getPublicPath() + "/users/");
+                } catch (UserCreatingException e) {
+                    session.setAttribute("creatingErr", e.getMessage());
+                    resp.sendRedirect(getPublicPath() + "/users/add");
+                }
             }
         } else {
-            HttpSession session = req.getSession(false);
             req.getMessages().forEach((key, msg) -> session.setAttribute(key, msg));
             resp.sendRedirect(getPublicPath() + "/users/add");
         }
