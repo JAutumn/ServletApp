@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.servlet.app.common.model.User;
-import com.servlet.app.common.dao.UserDAO;
 import com.servlet.app.common.services.UserService;
 
 @WebServlet("/pages/login")
