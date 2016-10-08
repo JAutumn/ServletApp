@@ -14,11 +14,9 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.servlet.app.common.services.FileService;
-
 @WebServlet("/pages/errorHandler")
 public class ErrorHandler extends HttpServlet {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ErrorHandler.class);
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

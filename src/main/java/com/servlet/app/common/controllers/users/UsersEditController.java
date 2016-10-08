@@ -21,7 +21,7 @@ import com.servlet.app.common.model.User;
 import com.servlet.app.common.exceptions.NoUserWithSuchIdException;
 import com.servlet.app.core.wrappers.ModelAwareHttpServletRequest;
 
-@WebServlet("/pages/users/*")
+@WebServlet("/pages/users/edit/*")
 @MultipartConfig
 public class UsersEditController extends ModelAwareHttpServletWrapper<User> {
     private UserService userService;

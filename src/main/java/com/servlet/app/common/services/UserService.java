@@ -16,6 +16,7 @@ import com.servlet.app.common.exceptions.UserCreatingException;
 import com.servlet.app.common.exceptions.UserDeletingException;
 import com.servlet.app.common.exceptions.UserUpdatingException;
 import com.servlet.app.common.model.User;
+import com.servlet.app.core.Paging;
 
 public class UserService {
     private UserDAO userDAO;
@@ -38,10 +39,12 @@ public class UserService {
                 connection.rollback();
                 throw new UserCreatingException("Cannot create user");
             }
-            Long generatedAvatarId = avatarDAO.create(part, generatedUserId, connection);
-            if (generatedAvatarId == 0) {
-                connection.rollback();
-                throw new UserCreatingException("Cannot create avatar for user");
+            if (part.getSize() > 0) {
+                Long generatedAvatarId = avatarDAO.create(part, generatedUserId, connection);
+                if (generatedAvatarId == 0) {
+                    connection.rollback();
+                    throw new UserCreatingException("Cannot create avatar for user");
+                }
             }
             connection.commit();
         } catch (IOException | SQLException e) {
@@ -104,15 +107,24 @@ public class UserService {
         return userDAO.getByEmail(email);
     }
 
+    public List<User> getAllUsersExceptOne(User currentUser, Paging paging) {
+        long offset = paging.getLimit() * (paging.getPageNumber() - 1);
+        return userDAO.getAllExceptOne(currentUser, offset, paging.getLimit(), paging.getSortField(), paging.getSortType());
+    }
+
+    public long countAll() {
+        return userDAO.countAll();
+    }
+
+    public List<String> getColumnsNames() {
+        return userDAO.getColumnsNames();
+    }
+
     public boolean isUserExisted(String email) {
         return userDAO.isExisted(email);
     }
 
     public boolean isExisted(Long userId) {
         return userDAO.isExisted(userId);
-    }
-
-    public List<User> getAllExcept(User user) {
-        return userDAO.getAllExcept(user);
     }
 }

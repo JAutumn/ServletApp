@@ -1,6 +1,7 @@
 package com.servlet.app.common.dao;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,10 +14,11 @@ import com.servlet.app.common.db.ConnectionProvider;
 import com.servlet.app.common.model.User;
 
 public class UserDAO {
-    private static final String FIND_ALL = "SELECT * FROM users";
+    private static final String COUNT_ALL = "SELECT count(*) FROM users";
+
     private static final String FIND_BY_EMAIL = "SELECT * FROM users WHERE email=?";
     private static final String FIND_BY_ID = "SELECT * FROM users WHERE id=?";
-    private static final String FIND_ALL_EXCEPT_ONE = "SELECT * FROM users WHERE id<>? ORDER BY name";
+    private static final String FIND_ALL_EXCEPT_ONE = "SELECT * FROM users WHERE id<>? ORDER BY %s %s LIMIT %d OFFSET %d";
 
     private static final String INSERT = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE users SET name=?, email=?, password=?, role=? WHERE id=?";
@@ -33,48 +35,36 @@ public class UserDAO {
         return user;
     }
 
-    public List<User> getAll() {
-        try (Connection connection = ConnectionProvider.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL)) {
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            List<User> users = new ArrayList<>();
-            while (resultSet.next()) {
-                users.add(mapUser(resultSet));
-            }
-            return users;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public Optional<User> getByEmail(String email) {
         try (Connection connection = ConnectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_EMAIL)) {
 
             preparedStatement.setString(1, email);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return Optional.of(mapUser(resultSet));
-            } else {
-                return Optional.empty();
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(mapUser(resultSet));
+                } else {
+                    return Optional.empty();
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public List<User> getAllExcept(User currentUser) {
+    public List<User> getAllExceptOne(User currentUser, long offset, int limit, String sortField, String sortType) {
+        String query = String.format(FIND_ALL_EXCEPT_ONE, sortField, sortType, limit, offset);
         try (Connection connection = ConnectionProvider.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_EXCEPT_ONE)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setLong(1, currentUser.getId());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            List<User> users = new ArrayList<>();
-            while (resultSet.next()) {
-                users.add(mapUser(resultSet));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<User> users = new ArrayList<>();
+                while (resultSet.next()) {
+                    users.add(mapUser(resultSet));
+                }
+                return users;
             }
-            return users;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -85,12 +75,44 @@ public class UserDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID)) {
 
             preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return Optional.of(mapUser(resultSet));
-            } else {
-                return Optional.empty();
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(mapUser(resultSet));
+                } else {
+                    return Optional.empty();
+                }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public long countAll() {
+        try (Connection connection = ConnectionProvider.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_ALL)) {
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    long count = resultSet.getLong(1);
+                    return count;
+                }
+                return 0L;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<String> getColumnsNames() {
+        try (Connection connection = ConnectionProvider.getConnection()) {
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet columns = metaData.getColumns(null, "public", "users", "");
+            List<String> columnsNames = new ArrayList<>();
+            while (columns.next()) {
+                columnsNames.add(columns.getString("COLUMN_NAME"));
+            }
+            return columnsNames;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -110,12 +132,14 @@ public class UserDAO {
             if (affectedRowsCount > 1) {
                 return 0L;
             }
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                connection.commit();
-                return generatedKeys.getLong(1);
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    connection.commit();
+                    return generatedKeys.getLong(1);
+                }
+                return 0L;
             }
-            return 0L;
         }
     }
 
