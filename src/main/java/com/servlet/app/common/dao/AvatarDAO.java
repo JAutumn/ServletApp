@@ -25,11 +25,12 @@ public class AvatarDAO {
 
             preparedStatement.setLong(1, userId);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return Optional.of(resultSet.getBlob("data").getBinaryStream());
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(resultSet.getBlob("data").getBinaryStream());
+                }
+                return Optional.empty();
             }
-            return Optional.empty();
         }
     }
 
@@ -46,11 +47,13 @@ public class AvatarDAO {
             if (affectedRowsCount > 1) {
                 return 0L;
             }
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                return generatedKeys.getLong(1);
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getLong(1);
+                }
+                return 0L;
             }
-            return 0L;
         }
     }
 
