@@ -42,7 +42,7 @@
                                         </tr>
                                         <tr>
                                             <td><label for="avatar" class="control-label">${avatarMsg}</label> </td>
-                                            <td><input type="file" id="avatar" name="avatar" required/></td>
+                                            <td><input type="file" id="avatar" name="avatar"/></td>
                                         </tr>
                                         <tr>
                                             <td colspan="2">
